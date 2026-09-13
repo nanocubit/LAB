@@ -1,0 +1,50 @@
+name: ASL EXP-ASL-0001 Replay
+
+on:
+  push:
+    branches:
+      - experiment/asl-router/EXP-ASL-0001/synthetic-baseline
+
+  pull_request:
+    paths:
+      - projects/asl-router/**
+      - .github/workflows/asl-exp-0001-replay.yml
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-replay:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: projects/asl-router
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install strict replay dependencies
+        run: python -m pip install -e '.[dev]'
+
+      - name: Run deterministic test suite
+        run: pytest -q
+
+      - name: Produce baseline artifacts
+        run: python experiments/EXP-ASL-0001-synthetic-baseline/run.py
+
+      - name: Verify clean replay against generated digest
+        run: python experiments/EXP-ASL-0001-synthetic-baseline/replay.py
+
+      - name: Upload replay artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EXP-ASL-0001-baseline-${{ github.sha }}
+          path: projects/asl-router/experiments/EXP-ASL-0001-synthetic-baseline/artifacts/
+          if-no-files-found: error
