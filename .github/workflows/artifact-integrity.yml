@@ -1,0 +1,18 @@
+name: Artifact integrity
+on:
+  pull_request:
+    paths: ["projects/**/artifacts/**", "artifacts/**"]
+  push:
+    paths: ["projects/**/artifacts/**", "artifacts/**"]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reject credential-like values in artifacts
+        run: |
+          if grep -RInE '(ghp_|github_pat_|AIza|sk-[A-Za-z0-9])' artifacts projects/*/experiments/*/artifacts 2>/dev/null; then
+            echo "credential-like content found"; exit 1
+          fi

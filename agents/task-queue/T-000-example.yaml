@@ -1,0 +1,15 @@
+schema_version: "1.0"
+task_id: "T-000"
+role: "executor"
+created_by: "solo"
+objective: "Example bounded task; replace before execution."
+branch: "agent/executor/T-000/example"
+allowed_paths:
+  - "projects/asl-router/src/**"
+  - "projects/asl-router/tests/**"
+definition_of_done:
+  - "tests pass"
+  - "receipt attached"
+budget:
+  max_compute_minutes: 15
+  max_cost_usd: "0.25"

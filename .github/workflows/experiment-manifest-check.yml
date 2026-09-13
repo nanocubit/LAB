@@ -1,0 +1,21 @@
+name: Experiment manifest check
+on:
+  pull_request:
+    paths: ["projects/**/experiments/**"]
+  push:
+    paths: ["projects/**/experiments/**"]
+permissions:
+  contents: read
+jobs:
+  required-files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require registered experiment files
+        run: |
+          for f in $(find projects -path '*/experiments/*/manifest.yaml'); do
+            d=$(dirname "$f")
+            test -f "$d/HYPOTHESIS.md"
+            test -f "$d/PROTOCOL.md"
+            test -f "$d/RESULTS.md"
+          done

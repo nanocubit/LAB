@@ -1,0 +1,12 @@
+schema_version: "1.0"
+defaults:
+  max_compute_minutes_per_task: 30
+  max_cost_usd_per_task: "0.50"
+  max_parallel_tasks: 2
+cost_verification_levels:
+  - unavailable
+  - self_reported
+  - backend_verified
+  - proxy_verified
+  - manually_verified
+  - mixed

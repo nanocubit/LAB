@@ -1,0 +1,15 @@
+schema_version: "1.0"
+roles:
+  executor:
+    read: ["**"]
+    write: ["projects/*/src/**", "projects/*/tests/**", "projects/*/experiments/**"]
+    deny: ["MEMORY.md", "DECISIONS.md", ".github/workflows/**", "lab_sdk/**", "schemas/**"]
+  auditor:
+    read: ["**"]
+    write: ["artifacts/receipts/**", "lineage/**"]
+  explorer:
+    read: ["**"]
+    write: ["projects/*/spikes/**"]
+  maintainer:
+    read: ["**"]
+    write: ["shared/**", ".github/workflows/**", "docs/**", "schemas/**", "lab_sdk/**"]

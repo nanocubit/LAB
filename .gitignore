@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+_generated/
+artifacts/tmp/
+.env
+.env.*
+!.env.example
