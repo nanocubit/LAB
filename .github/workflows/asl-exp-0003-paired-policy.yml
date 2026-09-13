@@ -1,0 +1,55 @@
+name: ASL EXP-0003 paired policy comparison
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: asl-exp-0003-paired-policy
+  cancel-in-progress: false
+
+jobs:
+  run-and-replay:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/asl-router
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install project
+        run: pip install .
+
+      - name: Run paired comparison
+        run: python experiments/EXP-ASL-0003-paired-policy-comparison/run.py
+
+      - name: Replay and verify result
+        run: python experiments/EXP-ASL-0003-paired-policy-comparison/replay.py
+
+      - name: Upload paired result artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EXP-ASL-0003-paired-policy-result
+          path: projects/asl-router/experiments/EXP-ASL-0003-paired-policy-comparison/results/result.json
+          if-no-files-found: error
+
+      - name: Commit verified result if changed
+        working-directory: .
+        run: |
+          if git diff --quiet -- projects/asl-router/experiments/EXP-ASL-0003-paired-policy-comparison/results/result.json; then
+            echo "No result changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add projects/asl-router/experiments/EXP-ASL-0003-paired-policy-comparison/results/result.json
+          git commit -m "Record EXP-ASL-0003 paired comparison result"
+          git push
