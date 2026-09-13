@@ -1,0 +1,20 @@
+experiment_id: EXP-ASL-0003
+title: Paired policy comparison at seed 17
+status: preregistered
+parents:
+  - EXP-ASL-0001-synthetic-baseline
+  - EXP-ASL-0002-phase-aware-candidate
+comparison:
+  baseline_policy: frozen-vector-only-v1
+  candidate_policy: phase-aware-candidate-v1
+  seed: 17
+  episodes: 400
+  candidate_exploration_rate: 0.1
+  primary_metric: mean_utility
+  acceptance_rule: candidate_mean_utility - baseline_mean_utility > 0
+scope: >
+  This experiment estimates a paired result only for the preregistered
+  synthetic condition at seed 17. It does not support a cross-seed claim.
+outputs:
+  result_path: results/result.json
+  replay_output_path: results/replay-result.json
