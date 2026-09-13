@@ -1,0 +1,59 @@
+{
+  "experiment_id": "EXP-ASL-0001",
+  "receipt_version": 1,
+  "commit_sha": "c98349103bbd60521381690f0a7532551d0cb5be",
+  "parameters": {
+    "seed": 7,
+    "episodes": 400,
+    "policy_id": "frozen-vector-only-v1"
+  },
+  "validation": {
+    "workflow": "ASL EXP-ASL-0001 Replay",
+    "status": "passed",
+    "tests_passed": 6,
+    "replay_ok": true
+  },
+  "metrics": {
+    "mean_utility": 0.702451956642,
+    "phase_metrics": {
+      "A": {
+        "episodes": 100,
+        "mean_utility": 0.819958532145,
+        "mean_oracle_regret": 0.000041467855
+      },
+      "B": {
+        "episodes": 100,
+        "mean_utility": 0.610000475453,
+        "mean_oracle_regret": 0.179999524547
+      },
+      "C": {
+        "episodes": 100,
+        "mean_utility": 0.580720174587,
+        "mean_oracle_regret": 0.279279825413
+      },
+      "D": {
+        "episodes": 100,
+        "mean_utility": 0.799128644383,
+        "mean_oracle_regret": 0.010871355617
+      }
+    }
+  },
+  "digests": {
+    "trace_digest": "blake3:50e544e2c88fba4b2e60e585a9752174a71aa167c35c004e77c6a6aad24ae6d4",
+    "metrics_digest": "blake3:9ebfb2b03103a5f24333c88f36994748b33c546e02b7cf85c796f2654bb4c441",
+    "result_digest": "blake3:98615c3fd822a4af083fc58417e7a633b6aed22427be7b68543cdcfa317418d7"
+  },
+  "evidence_level": "synthetic-deterministic-baseline",
+  "interpretation": {
+    "supported": [
+      "The baseline implementation is deterministic for the recorded parameters.",
+      "The baseline incurs material oracle regret during phases B and C.",
+      "The workflow can reproduce the recorded run identity."
+    ],
+    "not_supported": [
+      "Production routing improvement.",
+      "Generalization beyond the synthetic world.",
+      "Readiness for automatic policy promotion."
+    ]
+  }
+}
