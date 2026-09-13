@@ -1,0 +1,43 @@
+schema_version: "1.0"
+c14n_profile: "LAB-C14N/1"
+experiment_id: "EXP-ASL-0002-phase-aware-candidate"
+primary_project: "asl-router"
+projects:
+  - name: "asl-router"
+    revision: null
+evidence_level: "registered"
+status: "planned"
+hypothesis_id: "H-ASL-0002-phase-aware-candidate"
+protocol_version: "0.1.0"
+preregistered_at: "2026-09-13T20:28:00.000000Z"
+code:
+  revision: null
+  entrypoint: "asl_router.experiments.phase_aware_candidate"
+environment:
+  backend: "github_actions"
+  backend_tier: 1
+  python: "3.12"
+  container_digest: null
+  dependencies_lock: "uv.lock"
+dataset:
+  manifest: null
+  digest: null
+parameters:
+  seed: 17
+  episodes: 400
+  frozen_policy: "phase_aware_candidate"
+  phase_aware_candidate:
+    early_phase_weight: 0.7
+    late_phase_weight: 0.3
+    exploration_rate: 0.1
+expected_outputs:
+  - "artifacts/metrics.json"
+  - "artifacts/trace.parquet"
+constraints:
+  max_runtime_minutes: 10
+  max_cost_usd: "0.00"
+  max_memory_gb: 8
+verification:
+  replay_required: true
+  digest_algorithm: "blake3"
+  expected_result_digest: null
