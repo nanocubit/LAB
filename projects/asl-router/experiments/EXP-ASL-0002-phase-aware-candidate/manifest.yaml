@@ -8,11 +8,11 @@ projects:
 evidence_level: "registered"
 status: "planned"
 hypothesis_id: "H-ASL-0002-phase-aware-candidate"
-protocol_version: "0.1.0"
+protocol_version: "0.1.1"
 preregistered_at: "2026-09-13T20:28:00.000000Z"
 code:
   revision: null
-  entrypoint: "asl_router.experiments.phase_aware_candidate"
+  entrypoint: "asl_router.phase_aware_replay"
 environment:
   backend: "github_actions"
   backend_tier: 1
@@ -27,12 +27,16 @@ parameters:
   episodes: 400
   frozen_policy: "phase_aware_candidate"
   phase_aware_candidate:
-    early_phase_weight: 0.7
-    late_phase_weight: 0.3
     exploration_rate: 0.1
+    rules:
+      semantic: "vector_only"
+      mixed: "hybrid"
+      graph_like: "hybrid_rerank"
+      time_sensitive: "hybrid"
 expected_outputs:
+  - "artifacts/trace.json"
   - "artifacts/metrics.json"
-  - "artifacts/trace.parquet"
+  - "artifacts/artifact-manifest.json"
 constraints:
   max_runtime_minutes: 10
   max_cost_usd: "0.00"
