@@ -1,0 +1,52 @@
+name: ASL EXP-0002 phase-aware candidate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run-and-replay:
+    name: Run and replay EXP-ASL-0002
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        working-directory: projects/asl-router
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install project and replay dependency
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          python -m pip install blake3
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -p "test_*.py"
+
+      - name: Run EXP-ASL-0002
+        working-directory: projects/asl-router/experiments/EXP-ASL-0002-phase-aware-candidate
+        run: python run.py
+
+      - name: Verify deterministic replay
+        working-directory: projects/asl-router/experiments/EXP-ASL-0002-phase-aware-candidate
+        run: python replay.py
+
+      - name: Upload EXP-ASL-0002 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EXP-ASL-0002-phase-aware-candidate-artifacts
+          path: |
+            projects/asl-router/experiments/EXP-ASL-0002-phase-aware-candidate/artifacts/trace.json
+            projects/asl-router/experiments/EXP-ASL-0002-phase-aware-candidate/artifacts/metrics.json
+            projects/asl-router/experiments/EXP-ASL-0002-phase-aware-candidate/artifacts/artifact-manifest.json
+          if-no-files-found: error
+          retention-days: 30
