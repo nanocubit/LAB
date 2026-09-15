@@ -1,0 +1,33 @@
+{
+  "dataset_id": "tiny-world-v1",
+  "queries": [
+    {
+      "query_id": "q-001",
+      "subject_id": "user:maya",
+      "as_of": "2026-01-03T12:00:00Z",
+      "query": "What answer style does Maya prefer?",
+      "expected_memory_ids": ["mem-001"]
+    },
+    {
+      "query_id": "q-002",
+      "subject_id": "user:maya",
+      "as_of": "2026-01-04T12:00:00Z",
+      "query": "Does Maya prefer dark mode?",
+      "expected_memory_ids": []
+    },
+    {
+      "query_id": "q-003",
+      "subject_id": "user:maya",
+      "as_of": "2026-01-06T00:00:00Z",
+      "query": "Which appearance mode does Maya currently prefer?",
+      "expected_memory_ids": ["mem-004"]
+    },
+    {
+      "query_id": "q-004",
+      "subject_id": "user:leo",
+      "as_of": "2026-01-06T15:00:00Z",
+      "query": "Which account does Leo own?",
+      "expected_memory_ids": ["mem-005"]
+    }
+  ]
+}

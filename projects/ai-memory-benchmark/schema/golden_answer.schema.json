@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-memory-benchmark.dev/schema/golden_answer.schema.json",
+  "title": "GoldenAnswer",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["query_id", "answer", "memory_ids"],
+  "properties": {
+    "query_id": {"type": "string", "minLength": 1},
+    "answer": {"type": "string"},
+    "memory_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "evidence_event_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "dataset_id": "tiny-world-v1",
+  "rules": [
+    "Events with occurred_at later than query.as_of are invisible.",
+    "A memory_retract removes its referenced memory_id at and after the retraction time.",
+    "Results are subject-scoped: memories for another subject are never eligible.",
+    "A query that expects no memory IDs is a deliberate negative retrieval case."
+  ],
+  "expected_answers": {
+    "q-001": "Maya prefers concise Russian-language answers.",
+    "q-002": "No active memory supports dark mode at this time.",
+    "q-003": "Maya now prefers light mode.",
+    "q-004": "Leo owns the Nimbus account."
+  }
+}
