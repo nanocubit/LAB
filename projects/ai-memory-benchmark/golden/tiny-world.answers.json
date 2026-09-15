@@ -1,0 +1,29 @@
+{
+  "dataset_id": "tiny-world-v1",
+  "answers": [
+    {
+      "query_id": "q-001",
+      "answer": "Maya prefers concise Russian-language answers.",
+      "memory_ids": ["mem-001"],
+      "evidence_event_ids": ["evt-001"]
+    },
+    {
+      "query_id": "q-002",
+      "answer": "No active memory supports dark mode at this time.",
+      "memory_ids": [],
+      "evidence_event_ids": ["evt-004"]
+    },
+    {
+      "query_id": "q-003",
+      "answer": "Maya now prefers light mode.",
+      "memory_ids": ["mem-004"],
+      "evidence_event_ids": ["evt-005"]
+    },
+    {
+      "query_id": "q-004",
+      "answer": "Leo owns the Nimbus account.",
+      "memory_ids": ["mem-005"],
+      "evidence_event_ids": ["evt-006"]
+    }
+  ]
+}
