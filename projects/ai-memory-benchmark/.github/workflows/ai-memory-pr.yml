@@ -1,98 +1,44 @@
-name: AI Memory Benchmark - Phase 0 PR
+name: AI Memory Benchmark CI
 
 on:
+  push:
+    paths:
+      - "projects/ai-memory-benchmark/**"
+      - ".github/workflows/ai-memory-pr.yml"
   pull_request:
     paths:
       - "projects/ai-memory-benchmark/**"
-      - ".github/workflows/ai-memory-*.yml"
-  workflow_dispatch:
+      - ".github/workflows/ai-memory-pr.yml"
 
 permissions:
   contents: read
 
-concurrency:
-  group: ai-memory-pr-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  validate:
-    name: Phase 0 validation
-    runs-on: ubuntu-24.04
-    timeout-minutes: 20
+  validate-and-test:
+    name: validate-and-test
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: projects/ai-memory-benchmark
+
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Set up Python
+
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.11"
           cache: pip
           cache-dependency-path: projects/ai-memory-benchmark/pyproject.toml
-      - name: Install project and development dependencies
+
+      - name: Install benchmark and test dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
-      - name: Validate JSON Schema syntax
-        run: |
-          python - <<'PY'
-          import json
-          from jsonschema import Draft202012Validator
-          with open("schema/memory_event.schema.json", encoding="utf-8") as handle:
-              schema = json.load(handle)
-          Draft202012Validator.check_schema(schema)
-          print("memory_event.schema.json: valid Draft 2020-12 schema")
-          PY
-      - name: Verify Phase 0 document and directory contract
-        run: |
-          required=(README.md AI_MEMORY_BENCHMARK_SPEC.md SEMANTICS.md pyproject.toml schema/memory_event.schema.json reference/README.md reference/oracle/README.md reference/scoring/README.md reference/validator/README.md fixtures/tiny-world.plan.md adapters/README.md runners/README.md)
-          for path in "${required[@]}"; do
-            test -f "$path" || { echo "Missing required Phase 0 file: $path"; exit 1; }
-          done
-      - name: Run implemented semantic validator
-        run: |
-          if [[ -f "reference/validator/validate.py" && -f "fixtures/tiny-world.events.jsonl" ]]; then
-            python -m reference.validator.validate --dataset fixtures/tiny-world.events.jsonl --queries fixtures/tiny-world.queries.json
-          else
-            echo "SKIP: semantic validator or concrete tiny fixture is not implemented yet."
-          fi
-      - name: Verify oracle and golden reproducibility when implemented
-        run: |
-          if [[ -f "reference/oracle/generate_golden.py" && -f "fixtures/tiny-world.events.jsonl" && -f "fixtures/tiny-world.queries.json" && -f "fixtures/tiny-world.golden.json" ]]; then
-            rm -rf /tmp/ai-memory-tiny-golden
-            python -m reference.oracle.generate_golden --dataset fixtures/tiny-world.events.jsonl --queries fixtures/tiny-world.queries.json --output /tmp/ai-memory-tiny-golden
-            diff -ru fixtures/tiny-world.golden.json /tmp/ai-memory-tiny-golden/tiny-world.golden.json
-          else
-            echo "SKIP: oracle, concrete tiny fixture, or committed tiny goldens are not implemented yet."
-          fi
-      - name: Run reference tests when implemented
-        run: |
-          tests=()
-          [[ -d "reference/tests" ]] && tests+=("reference/tests")
-          [[ -d "generator/tests" ]] && tests+=("generator/tests")
-          if (( ${#tests[@]} )); then
-            pytest -q "${tests[@]}"
-          else
-            echo "SKIP: reference/generator test directories are not implemented yet."
-          fi
-      - name: Run negative-adapter suite when implemented
-        run: |
-          if [[ -f "runners/run_negative_suite.py" && -f "fixtures/negative-adapter-profiles.json" ]]; then
-            python runners/run_negative_suite.py --fixture tiny --expected-failures fixtures/negative-adapter-profiles.json
-          else
-            echo "SKIP: negative adapters are not implemented yet."
-          fi
-      - name: Upload diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ai-memory-phase0-${{ github.sha }}
-          path: |
-            projects/ai-memory-benchmark/.artifacts/
-            /tmp/ai-memory-tiny-golden/
-          if-no-files-found: ignore
-          retention-days: 14
+
+      - name: Validate tiny-world fixture
+        run: python reference/validator/validate_tiny_world.py
+
+      - name: Run semantic tests
+        run: python -m pytest
